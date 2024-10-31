@@ -8,17 +8,22 @@ node(){
 	stage('Build Automation'){
 		sh """
 			ls -lart
-			mvn clean install -Dmaven.test.skip=true
+			mvn clean install 
+                        // mvn clean install -Dmaven.test.skip=true
 			ls -lart target
 		"""
 	}
-	
-	// stage('Code Scan'){
-	// 	withSonarQubeEnv(credentialsId: 'SonarQubeCreds') {
-	// 		sh "${sonarHome}/bin/sonar-scanner"
-	// 	}
-		
-	// }
+
+	stage('Test Cases Execution'){
+		sh "mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Pcoverage-per-test"
+	}
+
+
+	stage('Code Scan'){
+		// withSonarQubeEnv(credentialsId: 'SonarQubeCreds') {
+		// 	sh "${sonarHome}/bin/sonar-scanner"
+		// }
+	}
 
 	stage('Archive Artifacts'){
 		archiverArtifacts artifacts: 'target/*.war'
