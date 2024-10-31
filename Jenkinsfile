@@ -6,12 +6,12 @@ node(){
 	}
 	
 	stage('Build Automation'){
-		sh """
+		sh '''
 			ls -lart
 			mvn clean install 
                         // mvn clean install -Dmaven.test.skip=true
 			ls -lart target
-		"""
+		'''
 	}
 
 	stage('Test Cases Execution'){
