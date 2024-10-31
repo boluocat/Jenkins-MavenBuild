@@ -6,7 +6,7 @@ node(){
 	}
 	
 	stage('Build Automation'){
-		bat '''
+		sh.exe '''
 			ls -lart
 			// mvn clean install 
                         mvn clean install -Dmaven.test.skip=true
