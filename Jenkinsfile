@@ -6,9 +6,9 @@ node(){
 	
 	stage('Build Automation'){
 		sh '''
-			ls -lart
+			dir -lart
                         mvn clean install -Dmaven.test.skip=true
-			ls -lart target
+			dir -lart target
 		'''
 	}
 
