@@ -1,41 +1,47 @@
-node(){
-	
-	stage('Code Checkout'){
-		checkout scm
-	}
-	
-	stage('Build Automation'){
-		bat '''
-			dir
-                        mvn clean install -Dmaven.test.skip=true
-			dir
-		'''
-	}
+pipeline {
+    agent  any
+    
+    environment {
+        // Define envirnoment variable
+        USER_NAME = 'WAWA'
+    }
 
-	stage('Test Cases Execution'){
-		// bat 'mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Pcoverage-per-test'
-	}
+    stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    echo 'Perparing to Checkout'
+                }
 
+                // Checkout the code from SCM (Git)
+                git branch: 'main', url :'https://github.com/boluocat/jenkins.git'
+            }
+        }
 
-	stage('Code Scan'){
-		// withSonarQubeEnv(credentialsId: 'SonarQubeCreds') {
-		// 	sh "${sonarHome}/bin/sonar-scanner"
-		// }
-	}
+        stage('Run Script') {
+            script {
+                echo 'Running script'
+                cd pipeline_HelloWorld
+                G:\Python39\python.exe ./helloworld.py ${USER_NAME}
+            }
+        }
+    }
 
-	stage('Archive Artifacts'){
-		archiverArtifacts artifacts: 'target/*.war'
-	}
-	
-	stage('Code Deployment'){
-		deploy adapters: [tomcat9(credentialsId: 'TomcatCreds', path: '', url: 'http://34.55.246.245:8080/')], contextPath: 'test_app', onFailure: false, war: 'target/*.war'
-	}
+    post {
+        always {
+            // Actions to perform regardless of pipeline success/failure
+            echo 'Cleaning up ...'
+            cleanWs()
+        }
 
-	stage('Notification'){
-		emailtext(
-			subject: "Job Completed",
-			body: "Jenkins Pipeline Job for Maven Build got completed",
-			to: "boluocat@outlook.com"
-			)
-	}
+        success {
+            // Actions to perform on pipeline success
+            echo 'Pipeline succeeded'
+        }
+
+        failure {
+            // Action to perform on pipeline failure
+            echo 'Pipeline failed'
+        }
+    }
 }
