@@ -24,7 +24,7 @@ node(){
 	}
 
 	stage('Archive Artifacts'){
-		archiverArtifacts artifacts: 'target/*.war'
+		// archiverArtifacts artifacts: 'target/*.war'
 	}
 	
 	stage('Code Deployment'){
