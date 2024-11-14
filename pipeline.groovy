@@ -14,15 +14,19 @@ pipeline {
                 }
 
                 // Checkout the code from SCM (Git)
-                git branch: 'main', url :'https://github.com/boluocat/jenkins.git'
+                git branch: 'master', url :'https://github.com/boluocat/Jenkins-MavenBuild.git'
             }
         }
 
         stage('Run Script') {
-            script {
-                echo 'Running script'
-                cd pipeline_HelloWorld
-                G:\Python39\python.exe ./helloworld.py ${USER_NAME}
+            steps {
+                script {
+                    echo 'Running script'
+                    bat """
+                    dir
+                    python helloworld.py ${env.USER_NAME}
+                    """
+                }    
             }
         }
     }
